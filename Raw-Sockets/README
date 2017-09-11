@@ -1,0 +1,93 @@
+PROJECT 4 : Raw Sockets
+
+Suraj Bhatia  001613061
+
+Rini Khanna 001662246
+
+
+Following are the instructions to run the program:
+
+1. Prior to running the program set the rules in iptables to drop the TCP RST packets:
+
+        sudo iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
+
+2. Make the program executable by giving the following permission :
+
+	chmod +x rawhttpget
+
+3. To run the program execute the following command:
+
+	sudo ./rawhttpget [url]
+
+ 
+High Level Approach:
+
+1. In this project we have written a program 'rawhttpget' responsible for taking any single URL as a command line input and downloading the page associated 
+   with it.
+
+2. The page is saved in a file and its content is then verified to check the integrity by using wget to download the exact same copy of the URL and using diff to 
+   compare the page with the saved file.
+
+All of this is achieved by using IPPROTO_RAW socket.
+
+3. The design of this program is split into three layers – Application, Transport and Link layer.
+
+4. The TCP connection is initiated by performing three way handshake that is done by setting the SYN flag as 1 and sending the packet. Following this, a SYN-ACK reply 
+   is received from the server. By sending an ACK to this packet, the Handshake is completed thereby enabling further transmission of data.
+
+5. While sending the data, every layer wraps its data in a packet and sends it to the lower layer. While receving, the lower layers then unwraps the data in the packet and sends it 
+   back to the higher layer. For example, link layer unwraps a segment, IP unwraps a datagram and TCP unwraps a packet until Application layer receives just the data.
+
+6. Received packets are filtered on the basis of expected sequence number. ACKs of the packets sent are calculated by adding length of the data of the last packet 
+   received to the previous sequence number.
+
+7. Accordingly, The TCP and IP Headers are constructed by setting the appropriate values of the header fields like IP version, header length, protocol identifier, 
+   total length, checksum, source and destination address for IP header, source port, destination port, data offset, flags, sequence number and checksum.
+
+8. Checksum of the TCP header is computed by constructing the pseudo header and validated to avoid receving erroneous packets.
+
+9. IP Header, TCP header and Data are then encapsulated to construct the packet which is forwarded as a request.
+
+10. Following this, an HTTP GET request is made for the URL inputted as a command line parameter to which the server acknowledges by transmitting the data.
+
+11. After complete transmission of the data, connection Tear Down is initiated. The FIN received from the server is acknowledged by the client by sending a FIN ACK and the connection is terminated.
+
+ 
+Functions performed by the three layers are as follows:
+
+1. Application layer : Sending the HTTP GET Request, validating and parsing the URL, removing the HTTP header and saving the files.
+
+2. Transport Layer : Performing three way handshake, sending and receiving TCP packet
+
+3. IP Layer : Sending and receiving the IP packets, Validating IP checksum and performing filtering of packets based on their types.
+
+ 
+TCP features implemented are:
+
+1. TCP checksum validation for all incoming packets and checksum generation for all outgoing TCP packets.
+
+2. Orderly handling packets based on acknowledgement and sequence numbers.
+
+3. Timeout functionality is included for packets not ACKed for one minute by assuming the case of packet loss and retransmitting 
+   it. As well, exiting the program if no data is received for 3 minutes.
+
+4. Duplicate packets, out of order and retransmissions identification and discarding based on sequence numbers.
+
+5. Basic congestion control mechanism by incrementing the cwnd for every ACK received upto a maximum of 1000 and resetting it back 
+   to 1 in case of timeout or packet drop.
+
+ 
+Challenges faced:
+
+The toughest part of the project was:
+
+1. To perform the three way handshake, specifically receiving the SYN-ACK.
+
+2. TCP connection teardown mainly sending the FIN packets
+
+3. Selection of window size was critical for downloading the files, specifically small window size was responsible for a lots of retransmission.
+
+ 
+Reference:
+
+Silver Moon’s Raw Socket programming tutorials has been used as reference.

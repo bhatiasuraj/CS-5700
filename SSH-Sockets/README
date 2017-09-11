@@ -1,0 +1,29 @@
+Team name: fcnteamrs
+Suraj Bhatia NUID 001613061
+Rini Khanna  NUID 001662246
+
+High Level Approach:
+1. Imported libraries socket, ssl and sys.
+2. Defined host and port that are used to create our client socket.
+3. The sys library is used to get parameters from the command line by the function sys.arg[].
+4. Mentioned all combinations of command line inputs that can be given to run the code with or without use of SSL.
+5. Printed error for any incorrect command line syntax input.
+6. Sending a HELLO message to the server in order to get the STATUS.
+7. Identifying the numbers and operator and performating mathematical operators to send it back to the server.
+8. The above step is run in a while loop infinitely until the server sends a BYE message with the secret flag.
+9. The secret flag is identified for connection with and without use of SSL.
+10.Permission to execute the python file is included in the Makefile..
+
+
+Challenges faced:
+1. Modifying the code to run the command line syntax exactly the way it was mentioned.
+2. Error-handling.
+
+Overview of testing code:
+1. Modifying the code to run exactly as the given syntax.
+2. This included many possibilities as the program could be executed by combination of  options such as the -s parameter, -p port number and also without any options.
+3. The case for -p port number paramter would not be executed for a half-complete syntax i.e. the port number has to mentioned to run the code succesfully.
+4. We also added a possibility of printing an error message in case of a wrongly entered paramters.
+5. After testing the code for different options, the output of the operations and the secret flag was noted for each of them.
+6. To execute the python file from any machine, a Makefile is created.
+

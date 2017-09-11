@@ -1,0 +1,46 @@
+High Level Approach:
+A. Import libraries socket, sys, array and BeautifulSoup.
+
+B. Created functions: createsocket, firstGETmessage, POSTmessage and GETwithCookie
+
+C. Algorithm:
+1. Used socket programming to send HTTP GET message to load root page of fakebook.
+2. Retrieved Cookie paramters such as csrf token and session id to create POST response for logging into fakebook.
+3. Created headers for POST message by observing HTTP responses using Wireshark. Login parameters, username and password picked from the command
+   line are sent inside the POST body.
+4. New Session id and home page URL are extracted from POST response message and sent to a new GET function to load fakebook pages.
+5. Created two arrays that hold URLs that are visited and unvisited to avoid the crawler go into an infinite loop.
+6. After loading a HTML page, following steps were performed:
+        i.   Parse page for secret flags by comparing tags and its attributes by using BeautifulSoup library. Printed secret flags whenever encountered and
+             incremented the secret flag count.
+        ii.  Parse page for more URLs for the web crawler to visit and added to unvisited URLs array.
+        iii. Added current URL to visited URLs array to avoid looping and removed them from unvisited URL to load a new link.
+7. Step 7 is run in a while loop until 5 secret flags are extracted from the HTML pages.
+8. Within the loop, following errors were handled:
+        i.   301 - Extracted redirected URL from HTML header and called GET function to open the new HTML page.
+        ii.  400, 403, 404 - Abandoned the URLs that generated these HTTP Status errors and moved on to the next URL in the unvisited URLs array.
+        iii. 500 - Calling GET function for the same URL until the request is successful i.e. HTTP 200 Status Ok response was received.
+9. Other errors handled for the Web Crawler:
+        i.   Socket creation error - Prints error and exits program if socket is not correctly created with host ip address and port parameters.
+        ii.  Legitimate login credentials - Prints error and exits program if incorrect username and/or password is entered.
+        iii. Invalid number of arguments - Prints error and exits program if less/more than 2 arguments i.e. username and password are passed via command line.
+
+
+Challenges faced:
+1. Creating POST header to log in to the fakebook home page.
+2. Writing parsing algorithm to extract secret flags from HTML pages by recognizing the tags and its attributes.
+3. Avoiding infinite loops by not visiting already parsed URLs.
+
+Overview of code testing:
+1. Created file 'webcrawler' with PYTHON script to crawl through Fakebook to obtain 5 secret flags.
+2. Imported BeautifulSoup library via FTP client on to project directory.
+3. Created Makefile to give executable permissions to other users for 'webcrawler'.
+4. Executed command ./webcrawler [username] [password]
+
+
+
+
+
+
+
+

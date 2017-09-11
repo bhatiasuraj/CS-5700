@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Take .log file as first argument
+filename="$1"
+
+# Check if Adverstisment ID leaked
+if egrep -Eic "c22ac16c-edcd-420a-a523-77495fbfebd0" $filename | tr -d '\n'; then
+	echo ' times AD ID leaked' 
+fi
+# Check if OS version leaked
+if egrep -Eic "Android 6.0.1" $filename | tr -d '\n'; then
+	echo ' times Operating System Version leaked' 
+fi
+# Check if IMEI number leaked
+if egrep -Eic "357425072491648" $filename | tr -d '\n'; then
+	echo ' times IMEI number leaked' 
+fi
+# Check if GPS Location leaked
+if egrep -Eioc "[^a-zA-Z]?lat([^a-zA-Z]|itude).*[0-9]+(\.?)[0-9]+" $filename | tr -d '\n'; then
+	echo ' times location leaked' 
+fi
+# Check if leaked
+if egrep -Eioc "[^a-zA-Z]?number[^a-zA-Z]?([:=])+(\"?).........." $filename | tr -d '\n' || egrep -Eioc "[^a-zA-Z]?phone[^a-zA-Z]?([:=])+(\"?)........." $filename | tr -d '\n' ; then
+	echo ' times Number leaked' 
+fi
+# Check if email IDs leaked
+if egrep -Eioc "[^ ]+@([a-z]+\.)+(((com)|(org))|((edu)|(net)))" $filename | tr -d '\n'; then
+	echo ' times personal email ID leaked' 
+fi 
+# Check if OS Build Number leaked
+if egrep -Eioc "MMB29M.G930AUCS2APC2" $filename | tr -d '\n'; then
+	echo " times Operating System Build number leaked" 
+fi
+# Check if Zip code leaked
+if egrep -Eioc "10028" $filename | tr -d '\n'; then
+	echo " times Zip code leaked"
+fi
+# Check if First Name leaked
+if egrep -Eioc "Alexander" $filename | tr -d '\n'; then
+        echo " times first name leaked"
+fi
+# Check if Last Name leaked
+if egrep -Eioc "Burkhart" $filename | tr -d '\n'; then
+        echo " times last name leaked"
+fi
+# Check if Address leaked
+if egrep -Eioc "New_York" $filename | tr -d '\n'; then
+        echo " times address leaked"
+fi
+# Check if User Email ID leaked
+if egrep -Eioc "trahkrub@gmail.com" $filename | tr -d '\n'; then
+        echo " times user email leaked"
+fi
+# Check if User Passwordleaked
+if egrep -Eioc "projectRecon567" $filename | tr -d '\n'; then
+        echo " times password leaked"
+fi
+# Check if Personal Device Information leaked
+if egrep -Eic "SAMSUNG-SM-G930A" $filename | tr -d '\n'; then
+        echo ' times personal device information leaked' 
+fi
+# Check if any other websited visited 
+echo 'Websites visited: '; awk '!seen[$9]++{print $9}' $filename > list.txt
+
+# Run below Python script to check which websites the Application visited
+~/check_website.py
+

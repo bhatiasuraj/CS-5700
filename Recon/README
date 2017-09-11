@@ -1,0 +1,140 @@
+Project ReCon: Which is better for privacy -- mobile app or web?
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Suraj Bhatia
+NUID: 001613061
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Android applications: CheapOair, Mercari, Momondo, Songkick Concerts and TripAdvisor
+
+1. The grepForStuff.sh script:
+The script is written in bash except for the part of checking websites that are visited while navigating through the apps is written in Python (check_website.py)
+The following information was checked if it was leaked while running the apps -
+	a. IMEI number
+	b. Advertisment ID
+	c. Operating System and Version
+	d. Application user and Personal email IDs 
+	e. Application user password
+	f. Location (Latitude and Longitude coordinates)
+	g. Application user phone number
+	h. Application user address and zip code
+	i. Operating System Build Number
+	j. Personal phone device information
+	k. Application user first and last names
+	l. Websites contacted by each application used
+
+Th following information was checked in the .log files created from the .dump files using the dump2bro command. 
+		$/cs5700/dump2bro filename.dump
+	
+The egrep and grep commands in bash are used to search for his information and note down the number of times it has been leaked and to which website.	
+		$egrep -Eic 'pattern' $filename | tr -d '\n'
+		
+The -c switch returns the count of the grep occurrences, -E for extended grep while -i to ignore cases of distinction in the pattern and filename content.
+	
+2. The PII found and the implications of the information being leaked:
+
+		 CheapOair				Ebates				Mercari				Momondo			      Songkick Concerts	        TripAdvisor
+		 ----------		   		-------		            	-----------		        ---------		      ------------------        -----------			
+Android	 	 AD ID					AD ID				Location	                Address			  	Location 		Location			
+		 IMEI					User Address		    	AD ID				AD ID				AD ID			Address
+		 OS Version				OS Version & Build No.  	OS Version			OS Version			IMEI 			AD ID   		       			
+		 Phone number				Device Information		Device Information		Device Information	  	Personal Email ID	Personal Email ID
+		 Device Information			OS Version & Build No.		OS Version and Build No.
+																									  Device Information		Device Information
+																																
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Chrome	 	 Location				AD ID				Location			AD ID				  Device Information		Location
+		 First & Last name			OS Version			User Email ID			OS Version			  OS Version			Zip code
+		 OS Version				Device Information		Personal Email ID		Device Information	  					Device Information
+		 Device Information							Device Information		AD ID
+											Personal Email ID
+											OS Version & Build No.
+																																			
+---------------------------------------------------------------------------------------------------------------------------------------------------------------																																		
+3. Websites contacted by each application:
+
+CheapOair - http://tap-nexus.appspot.com
+			http://socialize.us1.gigya.com
+			http://analytics.query.yahoo.com
+			http://api.wonderpush.com
+			http://s3.amazonaws.com
+			http://126384007.log.optimizely.com
+			http://intellisuggest.fareportal.com
+			http://www.googletagmanager.com
+			http://sslwidget.criteo.com
+			http://dis.us.criteo.com
+
+Ebates		http://ms.cmcm.com
+			http://brahe.apptimize.com
+			http://www.google.com
+			http://api.picsart.com
+			http://cmdts.ksmobile.com
+			http://analytics.query.yahoo.com
+			http://www.facebook.com
+			http://ajax.googleapis.com
+			http://s3.amazonaws.com
+			http://tags.tiqcdn.com
+			http://bat.bing.com
+			http://clients1.google.com
+			http://bat.r.msn.com
+			http://tr.staticiv.com
+			  
+Mercari		http://socialize.us1.gigya.com
+			http://analytics.query.yahoo.com
+			http://api.wonderpush.com
+			http://s3.amazonaws.com
+			http://ms.cmcm.com
+			http://www.google.com
+			http://www.facebook.com
+			http://dpm.demdex.net
+
+Momondo		http://s3.amazonaws.com
+			http://dev.appboy.com
+			http://socialize.us1.gigya.com
+			
+Songkick Concerts	       
+			http://triggers.wfxtriggers.com
+			http://safebrowsing.google.com
+			http://clients3.google.com
+			http://drive.google.com
+			http://mail.google.com
+			http://docs.google.com
+			http://ms.cmcm.com
+			http://api.picsart.com
+			http://analytics.query.yahoo.com
+			http://news.google.com
+			http://dpm.demdex.net
+			http://s3.amazonaws.com
+			http://cdn.initial-website.com
+			http://ajax.googleapis.com
+			http://analytics.twitter.com
+			http://www.facebook.com
+
+TripAdvisor http://analytics.query.yahoo.com
+			http://s3.amazonaws.com
+			http://cmdts.ksmobile.com
+			http://ms.cmcm.com
+			http://us-auth2.samsungosp.com
+			http://static.tacdn.com
+			http://www.youtube.com
+			http://www.linkedin.com
+			http://mail.google.com
+			http://api.uber.com
+			http://clients3.google.com
+			http://drive.google.com
+			http://docs.google.com
+			http://secure.splitwise.com
+			http://socialize.us1.gigya.com
+
+Many of the analytics websites have been contacted while using the application. Also, my personal Email ids (besides trahkrub@gmail.com) have been leaked 
+through my Google Play account, Google docs and Drive. Other websites such as Uber, PicsArt, Splitwise, LinkedIn and Facebook (all applications installed on my device) are also contacted which have no relation to the application I was browsing, so the traffic does not seem legitimate.
+
+4. Conclusion:
+The surprising data found was that most of the content was downloaded from Akamai CDNs and also some from Amazon AWS. 
+Also, none of the applications leaked Username or Passwords, but some did leak other personal email ids. 
+Almost every application leaked device information and OS version.
+From the PII leaked, it seems that the Chrome in Incognito mode (browser) version seems safer than the App version for most of the applications.				
+				
+				
+				
+				
+
+
